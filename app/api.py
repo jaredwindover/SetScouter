@@ -1,18 +1,12 @@
 import webapp2
 
 from lib.handlers import (
-    Hello,
     Message,
     Session,
     User
 )
 
 routes = [
-    webapp2.Route(
-        '/api',
-        handler=Hello.Handler,
-        methods=['GET']
-    ),
     webapp2.Route(
         '/api/message/<userid>',
         handler=Message.Handler,
