@@ -1,0 +1,18 @@
+import webapp2
+import webapp2_extras.auth as auth
+
+from lib.handlers import Hello, User, Session
+
+routes = [
+    ('/api',Hello.Handler),
+    ('/api/user',User.Handler),
+    ('/api/session',Session.Handler),
+]
+
+config = {
+    'webapp2_extras.sessions': {
+        'secret_key': 'The_Truth_Is_Out_There'
+    }
+}
+
+app = webapp2.WSGIApplication(routes=routes, debug=True, config=config)
