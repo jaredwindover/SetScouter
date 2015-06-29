@@ -4,8 +4,13 @@ from webapp2_extras.auth import Auth
 from webapp2_extras.appengine.auth.models import User
 from google.appengine.ext import db
 
+from ..util import Response as resp
+from ..util.Authorization import authenticate
+
 class Handler(webapp2.RequestHandler):
+    #post to users registers new user
     def post(self):
+        self.response.headers['Content-Type'] = 'application/json'
         firstname = self.request.get('firstname')
         lastname = self.request.get('lastname')
         email = self.request.get('email')
@@ -16,28 +21,33 @@ class Handler(webapp2.RequestHandler):
             lastname=lastname,
             password_raw=password
         )
-        if not work: #Should actually handle this by returning an error
-            print "Failure"
-            print info
-            return
-        user = info
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.write('User Created');
+        if not work:
+            self.response.write(resp.fail(
+                'email',
+                'Email address already exists'
+            ))
+        else:
+            user = info
+            self.response.write(resp.success())
 
+    #get to users gets list of users
     def get(self):
-        auth = Auth(self.request)
-        token = self.request.headers['Authorization']
-        userid = int(self.request.get('userid'))
-        user, timestamp = User.get_by_auth_token(userid, token)
-        if not user.validate_token(userid, 'auth', token):
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Error');
+        self.response.headers['Content-Type'] = 'application/json'
+        user = authenticate(self.request, int(self.request.get('userid')))
+        if not user:
+            self.response.write(resp.fail_auth())
         else:
             q = User.query()
-            self.response.headers['Content-Type'] = 'text/plain'
-            print q
-            for p in q:
-                print p.firstname
-                self.response.write(p.firstname);
+            def convert(user):
+                return {
+                    'firstname' : user.firstname,
+                    'lastname' : user.lastname,
+                    'email' : user.auth_ids[0]
+                }
+            self.response.write(
+                resp.success(
+                    q.map(convert)
+                )
+            )
                 
             

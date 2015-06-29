@@ -1,40 +1,47 @@
 import webapp2
+import json
 
 from webapp2_extras.auth import Auth
 from webapp2_extras.appengine.auth.models import User
 
-from ... import models.Message
+from ..models.Message import Message
+from ..util import Response as resp
+from ..util.Authorization import authenticate
 
 class Handler(webapp2.RequestHandler):
+    #post to message sends message
     def post(self, userid):
-        from_id = self.request.get('from_id')
-        token = self.request.headers['Authorization']
-        auth = Auth(self.request)
-        user, timestamp = User.get_by_auth_token(int(from_id), token)
+        user =  authenticate(self.request,
+                             int(self.request.get('from_id')))
         if not user:
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Error')
-        elif not user.validate_token(from_id, 'auth', token):
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Error')
+            self.response.write(resp.fail_auth())
         else:
-            #DO stuff here
-            #Create new message
-            #put it
-            #return some status code or shit
-            
+            content = self.request.get('content')
+            from_user, ts = User.get_by_auth_token(int(userid), token)
+            message = Message(
+                content=content,
+                from_firstname=from_user.firstname,
+                from_lastname=from_user.lastname,
+                to_userid=userid
+            )
+            message.put()
+            self.response.write(resp.success())
 
+    #get to message gets list of messages
     def get(self, userid):
-        token = self.request.headers['Authorization']
-        auth = Auth(self.request)
-        user, timestamp = User.get_by_auth_token(int(userid), token)
+        user = authenticate(self.request, int(userid))
         if not user:
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Error')
-        elif not user.validate_token(from_id, 'auth', token):
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.write('Error')
+            self.response.write(resp.fail_auth())
         else:
-            #DO stuff here
-            #Query messages that are for this mofo
-            #Return that shit
+            q = Message.query(Message.to_userid == userid)
+            def convert(message):
+                return {
+                    'content' : message.content,
+                    'firstname' : message.from_firstname,
+                    'lastname' : message.from_lastname
+                }
+            self.response.write(
+                resp.success(
+                    q.map(convert)
+                )
+            )
