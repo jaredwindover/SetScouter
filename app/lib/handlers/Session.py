@@ -10,19 +10,26 @@ class Handler(webapp2.RequestHandler):
     #Login returns token
     def post(self):
         self.response.headers['Content-Type'] = 'application/json'
-        auth = Auth(self.request)
         email = self.request.get('email')
         password = self.request.get('password')
         try:
-            user = auth.get_user_by_password(email, password)
+            user = User.get_by_auth_password(email, password)
         except:
                 self.response.write(resp.fail_pass())
                 return
         if not user:
             self.response.write(resp.fail_pass())
         else:
-            token = User.create_auth_token(user['user_id'])
-            self.response.write(resp.success({'Token' : token}))
+            token = User.create_auth_token(user.key.id())
+            self.response.write(resp.success({
+                'Token' : token,
+                'User' : {
+                    'firstname' : user.firstname,
+                    'lastname' : user.lastname,
+                    'email' : user.auth_ids[0],
+                    'id' : user.key.id()
+                }
+            }))
 
     #Logout deletes token
     def delete(self, userid):

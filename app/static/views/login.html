@@ -1,0 +1,23 @@
+<div class="jumbotron">
+  <div class="container">
+    <h1>SetScouter Online Platform Challenge</h1>
+    <p>This application is Jared Windover's submission for the Online Platform Challenge.</p>
+    <p>
+      <a class="btn btn-primary btn-lrg" role="button" ng-click="state='login'">Sign in</a>
+      <a class="btn btn-primary btn-lrg" role="button" ng-click="state='register'">Register</a>
+    </p>
+    <div class=" col-lg-6 input-group" ng-show="state=='register'">
+      <input ng-model="user.firstname" type="text" class="form-control" placeholder="First Name">
+      <input ng-model="user.lastname" type="text" class="form-control" placeholder="Last Name">
+      <input ng-model="user.email" type="text" class="form-control" placeholder="Email Address">
+      <input ng-model="user.passwordA" type="text" class="form-control" placeholder="Password">
+      <input ng-model="user.passwordB" type="text" class="form-control" placeholder="Verify Password">
+      <input type="submit" class="form-control" value="Submit" ng-click="register()">
+    </div>
+    <div class="col-lg-6 input-group" ng-show="state=='login'">
+      <input ng-model="user.email" type="text" class="form-control" placeholder="Email Address">
+      <input ng-model="user.password" type="text" class="form-control" placeholder="Password">
+      <input type="submit" class="form-control" value="Submit" ng-click="login()">
+    </div>
+  </div>
+</div>

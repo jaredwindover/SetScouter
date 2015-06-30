@@ -17,11 +17,10 @@ class Handler(webapp2.RequestHandler):
             self.response.write(resp.fail_auth())
         else:
             content = self.request.get('content')
-            from_user, ts = User.get_by_auth_token(int(userid), token)
             message = Message(
                 content=content,
-                from_firstname=from_user.firstname,
-                from_lastname=from_user.lastname,
+                from_firstname=user.firstname,
+                from_lastname=user.lastname,
                 to_userid=userid
             )
             message.put()

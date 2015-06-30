@@ -28,11 +28,21 @@ class Handler(webapp2.RequestHandler):
             ))
         else:
             user = info
-            self.response.write(resp.success())
+            token = User.create_auth_token(user.key.id())
+            self.response.write(resp.success({
+                'Token' : token,
+                'User' : {
+                    'firstname' : user.firstname,
+                    'lastname' : user.lastname,
+                    'email' : user.auth_ids[0],
+                    'id' : user.key.id()
+                }
+            }))
 
     #get to users gets list of users
     def get(self):
         self.response.headers['Content-Type'] = 'application/json'
+        print self.request.headers['Authorization']
         user = authenticate(self.request, int(self.request.get('userid')))
         if not user:
             self.response.write(resp.fail_auth())
@@ -42,7 +52,8 @@ class Handler(webapp2.RequestHandler):
                 return {
                     'firstname' : user.firstname,
                     'lastname' : user.lastname,
-                    'email' : user.auth_ids[0]
+                    'email' : user.auth_ids[0],
+                    'id' : user.key.id()
                 }
             self.response.write(
                 resp.success(
