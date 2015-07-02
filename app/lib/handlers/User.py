@@ -53,7 +53,8 @@ class Handler(webapp2.RequestHandler):
                     'firstname' : user.firstname,
                     'lastname' : user.lastname,
                     'email' : user.auth_ids[0],
-                    'id' : user.key.id()
+                    'id' : user.key.id(),
+                    'img' : user.img
                 }
             self.response.write(
                 resp.success(

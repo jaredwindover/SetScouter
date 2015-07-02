@@ -1,0 +1,27 @@
+<div class="panel panel-primary">
+  <div class="panel-body" ng-mouseenter="show=true" ng-mouseleave="show=false">
+    <img ng-src="{{user.img + '=s100'}}">
+    <p>{{user.firstname}} {{user.lastname}}</p>
+    <p>{{user.email}}</p>
+    <div ng-show="show || hold">
+      <textarea class="form-control"
+		ng-model="content"
+		ng-focus="hold=true"
+		ng-blur="hold=false">
+      </textarea>
+      <button type="button"
+	      class="btn btn-default"
+	      ng-click="sendMessage(user)"
+	      ng-focus="hold=true"
+	      ng-blur="hold=false">
+	Send Message
+      </button>
+    </div>
+    <div
+      class="alert alert-success"
+      role=alert
+      ng-show="sent">
+      Message Sent!
+    </div>
+  </div>
+</div>

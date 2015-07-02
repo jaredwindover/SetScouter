@@ -2,7 +2,7 @@ app.factory('User', ['$http', function($http){
     var urlBase = '/api/user';
     var User = {};
     User.getList = function(id, tok){
-	return $http.get(urlBase,
+	return $http.get(urlBase + '?userid=' + id,
 			 {'headers' : {
 			     'Authorization' : tok
 			 }});

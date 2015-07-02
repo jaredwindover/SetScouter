@@ -1,3 +1,42 @@
-<div>
-  This is the app!
+<div class="container">
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse">
+	<ul class="nav navbar-nav">
+	  <li><a href ng-click="UsersPage()">Users</a></li>
+	  <li><a href ng-click="MessagesPage()">Messages</a></li>
+	</ul>
+	<span class="navbar-text navbar-right dropdown">
+	  Signed in as
+	  <a href
+	     class="dropdown-toggle"
+	     data-toggle="dropdown"
+	     role="button"
+	     aria-haspopup="true"
+	     aria-expanded="false">
+	    {{user.firstname}}
+	  </a>
+	  <ul class="dropdown-menu">
+	    <li><a href ng-click="logout()">Logout</a></li>
+	    <li><a href ng-click="PicturePage()">Change Photo</a></li>
+	  </ul>
+	</span>
+      </div>
+    </div>
+  </nav>
+  <div ng-show="page==='Users'">
+    <user-display
+      list='userList'
+      fromid='user.id'
+      token='token'></user-display>
+  </div>
+  <div ng-show="page==='Messages'">
+    <div ng-repeat="message in messageList">
+      <show-message message="message"></show-message>
+    </div>
+  </div>
+  <div ng-show="page==='Picture'">
+    <form id="dzone">
+    </form>
+  </div>
 </div>

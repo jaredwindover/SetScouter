@@ -1,5 +1,4 @@
 import webapp2
-import json
 
 from webapp2_extras.auth import Auth
 from webapp2_extras.appengine.auth.models import User

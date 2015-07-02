@@ -36,7 +36,7 @@ class Handler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         user =  authenticate(self.request, int(userid))
         if user:
-            user.delete_auth_token(userid, token)
+            user.delete_auth_token(userid, self.request.headers['Authorization'])
             self.response.write(resp.success())
         else:
             self.response.write(resp.fail_auth())

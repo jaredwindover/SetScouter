@@ -3,7 +3,8 @@ import webapp2
 from lib.handlers import (
     Message,
     Session,
-    User
+    User,
+    Photo
 )
 
 routes = [
@@ -25,6 +26,11 @@ routes = [
     webapp2.Route(
         '/api/user',
         handler=User.Handler,
+        methods=['GET', 'POST']
+    ),
+    webapp2.Route(
+        '/api/photo/<userid>',
+        handler=Photo.Handler,
         methods=['GET', 'POST']
     )
 ]

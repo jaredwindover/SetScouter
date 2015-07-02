@@ -1,15 +1,15 @@
 app.controller('LoginController',
-	       ['$scope', 'Session', 'Auth', 'User',
-		function($scope, Session, Auth, User){
+	       ['$scope', 'Session', 'Auth', 'User', '$location',
+		function($scope, Session, Auth, User, $location){
 		    $scope.login = function(){
 			console.log("Trying to login");
 			Session.login($scope.user.email, $scope.user.password)
 			    .success(function(result){
 				if (result.status === "success") {
 				    console.log("Logged in successfully");
-				    $scope.user = result.data.User;
-				    $scope.authToken = result.data.Token;
-				    Auth.setUser($scope.user);
+				    Auth.setUser(result.data.User);
+				    Auth.setToken(result.data.Token);
+				    $location.path('#/');
 				}
 			    })
 		    };
@@ -24,9 +24,9 @@ app.controller('LoginController',
 				.success(function(result){
 				    if (result.status === "success") {
 					console.log("Registered successfully");
-					$scope.user = result.data.User;
-					$scope.authToken = result.data.Token;
-					Auth.setUser($scope.user);
+					Auth.setUser(result.data.User);
+					Auth.setToken(result.data.Token);
+					$location.path('#/');
 				    }
 				})
 			}
